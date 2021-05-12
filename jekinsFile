@@ -1,0 +1,41 @@
+
+  pipeline {
+      agent any
+      environment {
+        Docker_Tag = "getversion()"
+        }
+      stages{
+          stage('Cloning Git') {
+              steps{
+                git branch: 'main', url: 'https://github.com/Azeem-Haider/testing.git'              
+              }
+            }
+          stage('testing'){
+              steps{
+                echo "testing"   
+              }
+              
+           }
+           stage('Building image') {
+               steps{
+                    sh "docker build . -t azeem0322/backend_api:${Docker_Tag}" 
+               }
+           }
+            stage('dockerHub push') {
+               steps{
+                   withCredentials([string(credentialsId: 'docker-Hub', variable: 'dockerhubpwd')]) {
+                       sh "docker login -u azeem0322 -p ${dockerhubpwd}"
+                    }               
+                    sh "docker push azeem0322/backend_api:${Docker_Tag}" 
+               }
+            }
+        }
+          
+    }
+    
+    
+    
+    def getversion(){
+        def commitId=sh returnStdout: true, script: 'git rev-parse --short HEAD'
+        return commitId
+    }
