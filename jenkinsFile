@@ -1,0 +1,23 @@
+node {
+    environment {
+        DOCKER_TAG = "getversion()"
+    }
+    def app
+    stage('clone repository') {
+      git branch: 'main', url: 'https://github.com/Azeem-Haider/testing.git'
+    }
+    stage('Test'){
+        echo "TEST PASSED" 
+    }
+    
+    stage('Build/Push Image'){
+       docker.withRegistry('https://registry.hub.docker.com/', 'dockerHub') {   
+            def customImage = docker.build("azeem0322/backend_api:${env.BUILD_NUMBER}")
+            customImage.push()
+        }
+    }
+}
+def getversion(){
+        def commitId=sh returnStdout: true, script: 'git rev-parse --short HEAD'
+        return commitId
+    }
