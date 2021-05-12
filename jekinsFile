@@ -1,6 +1,7 @@
 
   pipeline {
       agent any
+      def myapp
       environment {
         Docker_Tag = "getversion()"
         }
