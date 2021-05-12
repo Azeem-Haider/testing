@@ -18,15 +18,15 @@
            }
            stage('Building image') {
                steps{
-                    sh "docker build . -t azeem0322/backend_api:${Docker_Tag} " 
+                    myapp = docker.build("azeem0322/backend_api:${Docker_Tag}")
                }
            }
             stage('dockerHub push') {
                steps{
-                   withCredentials([string(credentialsId: 'docker-Hub', variable: 'dockerhubpwd')]) {
-                       sh "docker login -u azeem0322 -p ${dockerhubpwd} "
-                    }               
-                    sh "docker push azeem0322/backend_api:${Docker_Tag} " 
+                docker.withRegistry('https://registry.hub.docker.com', 'dockerHub') {
+                            myapp.push("latest")
+                            myapp.push("${Docker_Tag}")
+                    }
                }
             }
         }
