@@ -6,14 +6,11 @@ app.use(express.json({ limit: '10kb' }));
 
 app.post('/api/v1/userData', (req, res) => {
 	try {
-		const name = req.body.name;
-		const email = req.body.email;
 		res.json({
 			data: {
 				status: 'success',
 				data: {
-					name,
-					email,
+					name:'hello',
 				},
 			},
 		});
